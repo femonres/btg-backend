@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from src.domain.enums.prefer_notification import PreferNotification
 from src.domain.enums.transaction_status import TransactionStatus
 from src.domain.enums.transaction_type import TransactionType
+from src.domain.exceptions.exceptions import SubscriptionNotFoundException
 from src.domain.models.fund import Fund
 from src.domain.models.transaction import Transaction
 from src.domain.value_objects.identifier import Identifier
@@ -48,4 +49,5 @@ class User(BaseModel):
             )
             self.transactions.append(cancel_transaction)
         else:
-            raise ValueError("No hay suscripción activa para este fondo.")
+            raise SubscriptionNotFoundException(fund.name)
+        
