@@ -1,18 +1,15 @@
 import datetime
-from pydantic import BaseModel
 
-from src.domain.enums.transaction_status import TransactionStatus
-from src.domain.enums.transaction_type import TransactionType
-from src.domain.models.fund import Fund
-from src.domain.models.user import User
-from src.domain.value_objects.identifier import Identifier
-from src.domain.value_objects.money import Money
+from domain.enums.transaction_status import TransactionStatus
+from domain.enums.transaction_type import TransactionType
+from domain.models.fund import Fund
+from domain.value_objects.identifier import Identifier
+from domain.value_objects.money import Money
 
 
-class Transaction(BaseModel):
+class Transaction:
     transaction_id: Identifier
-    user: 'User'
-    fund: Fund
+    fund_id: int
     amount: Money
     timestamp: datetime
     transaction_type: TransactionType

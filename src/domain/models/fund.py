@@ -1,10 +1,8 @@
-from pydantic import BaseModel
-
-from src.domain.value_objects.fund_category import FundCategory
-from src.domain.value_objects.money import Money
+from domain.value_objects.fund_category import FundCategory
+from domain.value_objects.money import Money
 
 
-class Fund(BaseModel):
+class Fund:
     id: int
     name: str
     min_amount: Money

@@ -1,5 +1,5 @@
 from enum import Enum
 
-class TransactionType(Enum):
+class TransactionType(str, Enum):
     OPENING = "OPENING"
     CANCELLATION = "CANCELLATION"

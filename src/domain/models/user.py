@@ -1,18 +1,17 @@
 import datetime
 from typing import List
-from pydantic import BaseModel
 
-from src.domain.enums.prefer_notification import PreferNotification
-from src.domain.enums.transaction_status import TransactionStatus
-from src.domain.enums.transaction_type import TransactionType
-from src.domain.exceptions.exceptions import SubscriptionNotFoundException
-from src.domain.models.fund import Fund
-from src.domain.models.transaction import Transaction
-from src.domain.value_objects.identifier import Identifier
-from src.domain.value_objects.money import Money
+from domain.enums.prefer_notification import PreferNotification
+from domain.enums.transaction_status import TransactionStatus
+from domain.enums.transaction_type import TransactionType
+from domain.exceptions.exceptions import SubscriptionNotFoundException
+from domain.models.fund import Fund
+from domain.models.transaction import Transaction
+from domain.value_objects.identifier import Identifier
+from domain.value_objects.money import Money
 
 
-class User(BaseModel):
+class User:
     id: int
     name: str
     email: str
@@ -25,8 +24,7 @@ class User(BaseModel):
         self.balance = self.balance.subtract(amount)
         transaction = Transaction(
             transaction_id=Identifier.generate(),
-            user=self,
-            fund=fund,
+            fund_id=fund.id,
             amount=amount,
             timestamp=datetime.now(),
             transaction_type=TransactionType.OPENING,
@@ -40,8 +38,7 @@ class User(BaseModel):
             self.balance = self.balance.add(transaction.amount)
             cancel_transaction = Transaction(
                 transaction_id=Identifier.generate(),
-                user=self,
-                fund=fund,
+                fund_id=fund.id,
                 amount=transaction.amount,
                 timestamp=datetime.now(),
                 transaction_type=TransactionType.CANCELLATION,

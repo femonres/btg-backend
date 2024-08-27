@@ -1,8 +1,8 @@
-from src.domain.events.user_event import UserSubscribeEvent, UserUnsubscribeEvent
-from src.domain.exceptions.exceptions import CanInvestException, InsufficientBalanceException
-from src.domain.models.fund import Fund
-from src.domain.models.user import User
-from src.domain.value_objects.money import Money
+from domain.events.user_event import UserSubscribeEvent, UserUnsubscribeEvent
+from domain.exceptions.exceptions import CanInvestException, InsufficientBalanceException
+from domain.models.fund import Fund
+from domain.models.user import User
+from domain.value_objects.money import Money
 
 
 class UserAggregate(User):
