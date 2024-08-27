@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from domain.models.user import User
+from domain import User
 
 class UserRepository(ABC):
 

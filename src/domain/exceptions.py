@@ -8,7 +8,7 @@ class InsufficientBalanceException(Exception):
 
 class CanInvestException(Exception):
     def __init__(self, fund_name, min_amount, message="El monto con el cual desea vincularse al fondo"):
-        self.message = f"{message}: {fund_name}, es inferior el minimo requerido: {format_currency(min_amount)}"
+        self.message = f"{message}: {fund_name}, es inferior el minimo requerido: {format_currency(min_amount.value)}"
         super().__init__(self.message)
 
 class FundNotFoundException(Exception):

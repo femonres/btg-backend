@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from domain.models.fund import Fund
+from domain import Fund
 
 class FundRepository(ABC):
 

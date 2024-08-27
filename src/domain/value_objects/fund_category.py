@@ -7,5 +7,5 @@ class FundCategory(BaseModel):
     def validate_category(cls, v):
         valid_categories = {"FPV", "FIC"}
         if v not in valid_categories:
-            raise ValueError(f"Categoría no válida: {v}. las permitidas son: {valid_categories}.")
+            raise ValueError(f"Categoría no válida: {v}. Las permitidas son: {valid_categories}.")
         return v
