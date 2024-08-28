@@ -1,6 +1,5 @@
 from enum import Enum
 
-
-class PreferNotification(str, Enum):
+class NotificationType(Enum):
     EMAIL = "email"
     PHONE = "phone"

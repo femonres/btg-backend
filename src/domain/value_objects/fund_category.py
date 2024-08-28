@@ -1,11 +1,11 @@
-from pydantic import BaseModel, field_validator
+class FundCategory:
+    VALID_CATEGORIES = {"FPV", "FIC"}
 
-class FundCategory(BaseModel):
-    category: str
+    def __init__(self, category: str):
+        self.category = self.validate_category(category)
 
-    @field_validator('category')
-    def validate_category(cls, v):
-        valid_categories = {"FPV", "FIC"}
-        if v not in valid_categories:
-            raise ValueError(f"Categoría no válida: {v}. Las permitidas son: {valid_categories}.")
-        return v
+    @staticmethod
+    def validate_category(category: str) -> str:
+        if category not in FundCategory.VALID_CATEGORIES:
+            raise ValueError(f"Categoría no válida: {category}. Las permitidas son: {FundCategory.VALID_CATEGORIES}.")
+        return category

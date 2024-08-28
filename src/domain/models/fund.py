@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from domain.value_objects.amount import Amount
 from domain.value_objects.fund_category import FundCategory
 

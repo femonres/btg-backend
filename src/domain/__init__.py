@@ -1,12 +1,10 @@
 from .enums.transaction_type import TransactionType
-from .enums.transaction_status import TransactionStatus
-from .enums.prefer_notification import PreferNotification
+from .enums.notification_type import NotificationType
 
 from .models.fund import Fund
-from .models.user import User
+from .models.user import User, ValidationStrategy
+from .models.subscription import Subscription
 from .models.transaction import Transaction
-
-from .aggregates.user_aggregate import UserAggregate
 
 from .value_objects.amount import Amount
 from .value_objects.identifier import Identifier
@@ -17,23 +15,25 @@ from .events.user_event import DomainEvent, UserSubscribeEvent, UserUnsubscribeE
 
 from .repositories.user_repository import UserRepository
 from .repositories.fund_repository import FundRepository
+from .repositories.transaction_repository import TransactionRepository
 
-from .exceptions import InsufficientBalanceException, CanInvestException, FundNotFoundException, SubscriptionNotFoundException, UserNotFoundException
+from .exceptions import SubscriptionAlreadyException, InsufficientBalanceException, CanInvestException, FundNotFoundException, SubscriptionNotFoundException, UserNotFoundException
 
 __all__ = [
     'Fund',
     'User',
-    'UserAggregate',
+    'Subscription',
     'Transaction',
     'TransactionType',
-    'TransactionStatus',
-    'PreferNotification',
+    'NotificationType',
+    'ValidationStrategy',
     'Amount',
     'Identifier',
     'FundCategory',
     'UserRepository',
     'FundRepository',
+    'TransactionRepository',
     'EventPublisher',
     'DomainEvent', 'UserSubscribeEvent', 'UserUnsubscribeEvent',
-    'InsufficientBalanceException', 'CanInvestException', 'FundNotFoundException', 'SubscriptionNotFoundException', 'UserNotFoundException'
+    'SubscriptionAlreadyException', 'InsufficientBalanceException', 'CanInvestException', 'FundNotFoundException', 'SubscriptionNotFoundException', 'UserNotFoundException'
 ]
