@@ -13,13 +13,8 @@ class DynamoDBFundRepositoryImpl(FundRepository):
         return [FundDAO.from_dynamo_item(item) for item in items]
 
     def get_by_id(self, fund_id: int) -> Fund:
-        response = self.table.get_item(
-            Key={
-                'PK': f'FUND#{fund_id}',
-                'SK': f'#METADATA#{fund_id}'
-            }
-        )
-        item = response.get('Item')
+        response = self.table.get_item(Key={'fundId': str(fund_id)})
+        item = response['Item']
 
         if not item:
             raise FundNotFoundException(fund_id)

@@ -9,7 +9,7 @@ from interfaces.api.controllers.user_controller import UserController
 
 # Database
 def get_user_repository() -> UserRepository:
-    return DynamoDBUserRepositoryImpl('UserTable')
+    return DynamoDBUserRepositoryImpl('ClientTable')
 
 def get_fund_repository() -> FundRepository:
     return DynamoDBFundRepositoryImpl('FundTable')

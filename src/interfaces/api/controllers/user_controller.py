@@ -23,5 +23,5 @@ class UserController:
         return UserResponse.model_validate(user)
 
     def get_transaction_history(self, user_id: int) -> list[TransactionResponse]:
-        transactions = self.transaction_history_usecase(user_id)
+        transactions = self.transaction_history_usecase.execute(user_id)
         return [TransactionResponse.model_validate(tx) for tx in transactions]

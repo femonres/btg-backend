@@ -15,10 +15,10 @@ class UserCreate(BaseModel):
 class UserResponse(BaseModel):
     id: str
     name: str
-    email: EmailStr
+    email: str
     phone: str
-    notification: NotificationType
     balance: float
+    notification: NotificationType
     subscriptions: list[SubscriptionResponse]
 
     class Config:

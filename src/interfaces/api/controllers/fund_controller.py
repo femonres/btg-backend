@@ -7,12 +7,12 @@ from utils.error_utils import handle_exception
 
 class FundController:
     def __init__(self, get_funds_usecase: GetFundsUsecase, subscribe_usecase: SubscribeToFundUseCase, unsubscribe_usecase: UnsubscribeOfFundUseCase):
-        self.all_funds_usecase = get_funds_usecase
+        self.get_funds_usecase = get_funds_usecase
         self.subscribe_usecase = subscribe_usecase
         self.unsubscribe_usecase = unsubscribe_usecase
 
     def get_all_funds(self) -> list[FundResponse]:
-        funds = self.all_funds_usecase.execute()
+        funds = self.get_funds_usecase.execute()
         return [FundResponse.model_validate(tx) for tx in funds]
 
     def subscribe(self, fund_id: int, subscription: CreateSubscription) -> TransactionResponse:

@@ -8,8 +8,7 @@ class UserDAO:
     @staticmethod
     def to_dynamo_item(user: User):
         return {
-            'PK': f'CLIENT#{user.id}',
-            'SK': f'#METADATA#{user.id}',
+            'ClientId': str(user.id),
             'Name': user.name,
             'Email': user.email,
             'Phone': user.phone,
@@ -23,11 +22,11 @@ class UserDAO:
                 for subscription in user.subscriptions
             ]
         }
-    
+        
     @staticmethod
     def from_dynamo_item(item: Dict) -> User:
         user = User(
-            id=int(item['PK'].split('#')[1]),
+            id=int(item['ClientId']),
             name=item['Name'],
             email=item['Email'],
             phone=item['Phone'],

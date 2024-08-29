@@ -50,7 +50,7 @@ class User:
         return transaction
         
     def is_subscribed(self, fund: Fund) -> bool:
-        return any(sub.fund == fund for sub in self.subscriptions)
+        return any(sub.fund_id == fund.id for sub in self.subscriptions)
     
     def get_subscription(self, fund: Fund) -> Optional[Subscription]:
         for subscription in self.subscriptions:
