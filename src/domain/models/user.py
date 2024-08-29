@@ -17,7 +17,7 @@ class ValidationStrategy(ABC):
 class User:
     def __init__(self, id: int, name: str, email: str, phone: str, 
                  notification: NotificationType, balance: Amount,
-                 validations: List[ValidationStrategy] = None):
+                 validations: Optional[List[ValidationStrategy]] = None):
         self.id = id
         self.name = name
         self.email = email
@@ -25,20 +25,20 @@ class User:
         self.notification = notification
         self.balance = balance
         self.subscriptions: List[Subscription] = []
-        self.validations = validations
+        self.validations = validations if validations is not None else []
 
-    def subscribe_to_fund(self, fund: 'Fund', amount: Amount):
+    def subscribe_to_fund(self, fund: Fund, amount: Amount):
         for validation in self.validations:
             validation.can_subscribe(self, fund, amount)
 
-        subscription = Subscription(user=self, fund=fund, amount=amount)
+        subscription = Subscription(fund_id=fund.id, amount=amount)
         self.subscriptions.append(subscription)
         self.balance -= amount
 
-        transaction = Transaction(fund_id=fund.id, amount=amount, transaction_type=TransactionType.OPENING)
+        transaction = Transaction(user_id=self.id, fund_id=fund.id, fund_name=fund.name, amount=amount, transaction_type=TransactionType.OPENING)
         return transaction
 
-    def cancel_fund_subscription(self, fund: 'Fund'):
+    def cancel_fund_subscription(self, fund: Fund):
         subscription = self.get_subscription(fund)
         if not subscription:
             raise SubscriptionNotFoundException(fund.name)
@@ -46,14 +46,14 @@ class User:
         self.balance += subscription.amount
         self.subscriptions.remove(subscription)
 
-        transaction = Transaction(fund_id=fund.id, amount=subscription.amount, transaction_type=TransactionType.CANCELLATION)
+        transaction = Transaction(user_id=self.id, fund_id=fund.id, fund_name=fund.name, amount=subscription.amount, transaction_type=TransactionType.CANCELLATION)
         return transaction
         
-    def is_subscribed(self, fund: 'Fund') -> bool:
+    def is_subscribed(self, fund: Fund) -> bool:
         return any(sub.fund == fund for sub in self.subscriptions)
     
-    def get_subscription(self, fund: 'Fund') -> Optional['Subscription']:
+    def get_subscription(self, fund: Fund) -> Optional[Subscription]:
         for subscription in self.subscriptions:
-            if subscription.fund == fund:
+            if subscription.fund_id == fund.id:
                 return subscription
         return None

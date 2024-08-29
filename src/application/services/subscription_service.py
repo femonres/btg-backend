@@ -6,7 +6,7 @@ class SubscriptionService:
         self.fund_repository = fund_repository
         self.transaction_repository = transaction_repository
 
-    def subscribe_to_fund(self, user_id: int, fund_id: int, amount: int, validations: list[ValidationStrategy]) -> 'Transaction':
+    def subscribe_to_fund(self, user_id: int, fund_id: int, amount: int, validations: list[ValidationStrategy]):
         user = self.user_repository.get_by_id(user_id)
         fund = self.fund_repository.get_by_id(fund_id)
         
@@ -16,9 +16,9 @@ class SubscriptionService:
         self.user_repository.save(user)
         self.transaction_repository.save(transaction)
         
-        return transaction
+        return transaction, user
 
-    def unsubscribe_from_fund(self, user_id: int, fund_id: int) -> 'Transaction':
+    def unsubscribe_from_fund(self, user_id: int, fund_id: int):
         user = self.user_repository.get_by_id(user_id)
         fund = self.fund_repository.get_by_id(fund_id)
         
@@ -27,7 +27,7 @@ class SubscriptionService:
         self.user_repository.save(user)
         self.transaction_repository.save(transaction)
         
-        return transaction
+        return transaction, user
 
     def get_transaction_history(self, user_id: int) -> list['Transaction']:
         return self.transaction_repository.find_by_user_id(user_id)

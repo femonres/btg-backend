@@ -13,11 +13,11 @@ class SubscribeToFundUseCase:
     def execute(self, dto: CreateSubscriptionDTO):
         validations_policies = [SubscriptionAlreadyValidation(), InsufficientBalanceValidation(), MinimumAmountValidation()]
 
-        transaction = self.subscription_service.subscribe_to_fund(dto.user_id, dto.fund_id, dto.amount, validations_policies)
+        transaction, user = self.subscription_service.subscribe_to_fund(dto.user_id, dto.fund_id, dto.amount, validations_policies)
 
         # Enviar notificación
-        message = f"Suscripción exitosa al fondo {transaction.fund_id} por un monto de {format_currency(dto.amount)}."
-        self.notification_service.send_notification(transaction.user, transaction.user.notification, message)
+        message = f"Suscripción exitosa al fondo {transaction.fund_name} por un monto de {format_currency(transaction.amount.value)}."
+        self.notification_service.send_notification(user, user.notification, message)
         
         return TransactionMapper.from_entity(transaction)
         

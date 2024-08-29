@@ -13,6 +13,7 @@ class TransactionDAO:
             'SK': f'TRANSACTION#{transaction.transaction_id}',
             'UserID': transaction.fund_id,
             'FundID': transaction.fund_id,
+            'FundName': transaction.fund_name,
             'Amount': transaction.amount.value,
             'Timestamp': transaction.timestamp.time.isoformat(),
             'TransactionType': transaction.transaction_type.value,
@@ -23,6 +24,7 @@ class TransactionDAO:
         transaction = Transaction(
             user_id=int(item['FundID']),
             fund_id=int(item['FundID']),
+            fund_name=str(item['FundName']),
             amount=Amount(item['Amount']),
             type=TransactionType[item['TransactionType']]
         )

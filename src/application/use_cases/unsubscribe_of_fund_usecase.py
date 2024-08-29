@@ -10,11 +10,11 @@ class UnsubscribeOfFundUseCase:
         self.notification_service = notification_service
 
     def execute(self, dto: CancelSubscriptionDTO):
-        transaction = self.subscription_service.unsubscribe_from_fund(dto.user_id, dto.fund_id)
+        transaction, user = self.subscription_service.unsubscribe_from_fund(dto.user_id, dto.fund_id)
         
         # Enviar notificación
-        message = f"Cancelación exitosa de la suscripción al fondo {transaction.fund.name}."
-        self.notification_service.send_notification(transaction.user, transaction.user.notification, message)
+        message = f"Cancelación exitosa de la suscripción al fondo {transaction.fund_name}."
+        self.notification_service.send_notification(user, user.notification, message)
         
         
         return TransactionMapper.from_entity(transaction)
