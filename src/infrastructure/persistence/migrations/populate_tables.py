@@ -27,6 +27,7 @@ def create_funds(table_name: str):
 
     for fondo in fondos:
         table.put_item(Item=fondo)
+    print("Fondos insertados en la tabla FundTable")
 
 def create_test_user(table_name: str):
     table = get_dynamodb_table(table_name)
@@ -39,8 +40,8 @@ def create_test_user(table_name: str):
         "Notification": "email",  # Preferencia de notificación
         "Balance": 500000  # Saldo inicial
     }
-
     table.put_item(Item=user)
+    print("Clientes insertados en la tabla ClientTable")
 
 if __name__ == "__main__":
     create_funds("FundTable")

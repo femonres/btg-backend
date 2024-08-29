@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from interfaces.api.routers.user_routes import router as user_router
 from interfaces.api.routers.fund_routes import router as fund_router
@@ -11,8 +12,13 @@ setup_logger()
 
 app = FastAPI(title="BTG Pactual Funds API")
 
-#app.middleware("http")(dispatch)
-app.middleware("http")(error_handling_middleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT"],
+    allow_headers=["Authorization", "Content-Type"],
+)
 app.include_router(user_router, prefix="/api/v1", tags=["Users"])
 app.include_router(fund_router, prefix="/api/v1", tags=["Funds"])
 
