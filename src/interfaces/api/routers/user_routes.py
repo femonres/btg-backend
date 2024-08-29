@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from domain import UserNotFoundException
 from interfaces.api.controllers.user_controller import UserController
-from interfaces.api.dependency_injection import get_user_controller
+from interfaces.dependency_injection import get_user_controller
 from interfaces.api.schemas.user_schemas import UserResponse, UserCreate
 from interfaces.api.schemas.transaction_schemas import TransactionResponse
 
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/users")
 
 @router.get("", response_model=list[UserResponse])
 async def get_users(controller: UserController = Depends(get_user_controller)):
-    return controller.get_profile(user_id=1)
+    return controller.fetch_all()
 
 @router.get("/{user_id}", response_model=UserResponse)
 async def get_user_by_id(user_id: int, controller: UserController = Depends(get_user_controller)):

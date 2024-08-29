@@ -10,9 +10,13 @@ class UserController:
         self.reset_balance_usecase = reset_balance_usecase
         self.transaction_history_usecase = transaction_history_usecase
 
+    def fetch_all(self) -> list[UserResponse]:
+        user = self.profile_usecase.execute(1)
+        return  [UserResponse.model_validate(user)]
+
     def get_profile(self, user_id: int) -> UserResponse:
         user = self.profile_usecase.execute(user_id)
-        return UserResponse.model_validate(user)
+        return  UserResponse.model_validate(user)
     
     def update_profile(self, user_id: int, user: UserCreate) -> UserResponse:
         user = self.update_profile_usecase.execute(user_id, user)

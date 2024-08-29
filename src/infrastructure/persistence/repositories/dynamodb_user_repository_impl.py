@@ -11,20 +11,22 @@ class DynamoDBUserRepositoryImpl(UserRepository):
         self.table = get_dynamodb_table(table_name)
 
     def get_all(self) -> list[User]:
-        response = self.table.scan()
-        items = response.get('Items', [])
-        return [UserDAO.from_dynamo_item(item) for item in items]
+        try:
+            response = self.table.scan()
+            items = response.get('Items', [])
+            return [UserDAO.from_dynamo_item(item) for item in items]
+        except Exception as err:
+            handle_exception(err)
+            return []
 
     def get_by_id(self, user_id: int) -> Optional[User]:
         try:
             response = self.table.get_item(Key={'ClientId': str(user_id)})
-        except Exception as err:
-            handle_exception(err)
-            raise
-        else:
             item = response['Item']
             if item:
                 return UserDAO.from_dynamo_item(item)
+        except Exception as err:
+            handle_exception(err)
             return None
 
     def save(self, user: User):

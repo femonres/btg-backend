@@ -6,3 +6,6 @@ class FundResponse(BaseModel):
     name: str
     min_amount: int
     category: str
+
+    class Config:
+        from_attributes = True

@@ -14,18 +14,18 @@ def get_user_repository() -> UserRepository:
 def get_fund_repository() -> FundRepository:
     return DynamoDBFundRepositoryImpl('FundTable')
 
-def get_fund_repository() -> TransactionRepository:
+def get_transaction_repository() -> TransactionRepository:
     return DynamoDBTrasacctionRepositoryImpl('TransactionTable')
 
 # Servicios
 def get_fund_service():
-    user_repo = get_user_repository()
-    return FundService(user_repo)
+    fund_repo = get_fund_repository()
+    return FundService(fund_repo)
 
 def get_subscription_service():
     user_repo = get_user_repository()
-    fund_repo = get_user_repository()
-    transaction_repo = get_user_repository()
+    fund_repo = get_fund_repository()
+    transaction_repo = get_transaction_repository()
     return SubscriptionService(user_repo, fund_repo, transaction_repo)
 
 def get_user_service():
@@ -75,7 +75,7 @@ def get_user_controller():
     return UserController(profile_usecase, update_profile_usecase, reset_balance_usecase, transaction_history_usecase)
 
 def get_fund_controller():
-    get_funds_usecase = get_funds_usecase()
+    funds_usecase = get_funds_usecase()
     subscribe_usecase = get_subscribe_usecase()
     unsubscribe_usecase = get_unsubscribe_usecase()
-    return FundController(get_funds_usecase, subscribe_usecase, unsubscribe_usecase)
+    return FundController(funds_usecase, subscribe_usecase, unsubscribe_usecase)

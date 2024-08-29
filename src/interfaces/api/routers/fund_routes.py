@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from domain import FundNotFoundException, InsufficientBalanceException
+from domain import UserNotFoundException, FundNotFoundException, InsufficientBalanceException
 from interfaces.api.controllers.fund_controller import FundController
-from interfaces.api.dependency_injection import get_fund_controller
+from interfaces.dependency_injection import get_fund_controller
 from interfaces.api.schemas.fund_schemas import FundResponse
 from interfaces.api.schemas.transaction_schemas import TransactionResponse, CreateSubscription, CancelSubscription
 
@@ -18,9 +18,11 @@ async def get_funds(controller: FundController = Depends(get_fund_controller)):
 async def subscribe_to_fund(fund_id: int, subscription: CreateSubscription, controller: FundController = Depends(get_fund_controller)):
     try:
         return controller.subscribe(fund_id, subscription)
+    except UserNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except FundNotFoundException as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
-    except InsufficientBalanceException as e:
+    except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 @router.post("/{fund_id}/unsubscribe", response_model=TransactionResponse)

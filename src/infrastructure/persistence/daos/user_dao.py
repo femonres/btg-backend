@@ -13,7 +13,7 @@ class UserDAO:
             'Email': user.email,
             'Phone': user.phone,
             'Notification': user.notification.value,
-            'Balance': str(user.balance.value),
+            'Balance': user.balance.value,
             'Subscriptions': [
                 {
                     'FundID': str(subscription.fund.id),

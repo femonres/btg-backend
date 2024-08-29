@@ -17,7 +17,7 @@ class FundController:
 
     def subscribe(self, fund_id: int, subscription: CreateSubscription) -> TransactionResponse:
         try:
-            dto = CreateSubscriptionDTO(subscription.user_id, fund_id, subscription.amount.value)
+            dto = CreateSubscriptionDTO(subscription.user_id, fund_id, subscription.amount)
             transaction = self.subscribe_usecase.execute(dto)
             return TransactionResponse.model_validate(transaction)
         except FundNotFoundException as e:

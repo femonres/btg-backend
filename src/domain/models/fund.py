@@ -9,4 +9,4 @@ class Fund:
         self.category = category
 
     def can_invest(self, amount: Amount) -> bool:
-            return self.min_amount.value >= amount.value
+            return self.min_amount.value <= amount.value

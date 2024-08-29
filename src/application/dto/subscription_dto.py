@@ -2,6 +2,7 @@ from typing import NamedTuple
 
 
 class SubscriptionDTO(NamedTuple):
+    id: str
     fund_id: int
     amount: int
 

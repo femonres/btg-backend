@@ -22,7 +22,7 @@ class TransactionDAO:
     @staticmethod
     def from_dynamo_item(item: Dict) -> Transaction:
         transaction = Transaction(
-            user_id=int(item['FundID']),
+            user_id=int(item['UserID']),
             fund_id=int(item['FundID']),
             fund_name=str(item['FundName']),
             amount=Amount(item['Amount']),

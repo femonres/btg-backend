@@ -1,8 +1,10 @@
 from pydantic import BaseModel, EmailStr
 
 from domain import NotificationType
+from application import UserDTO
 
 class SubscriptionResponse(BaseModel):
+    id: str
     fund_id: int
     amount: float
 
@@ -13,13 +15,13 @@ class UserCreate(BaseModel):
     notification: NotificationType
 
 class UserResponse(BaseModel):
-    id: str
+    id: int
     name: str
     email: str
     phone: str
-    balance: float
-    notification: NotificationType
-    subscriptions: list[SubscriptionResponse]
+    balance: int
+    notification: str
+    subscriptions: list[SubscriptionResponse] = []
 
     class Config:
         from_attributes = True

@@ -6,6 +6,7 @@ class SubscriptionMapper:
     @staticmethod
     def from_entity(subscription: 'Subscription') -> SubscriptionDTO:
         return SubscriptionDTO(
-            fund_id=subscription.fund.id,
+            id=subscription.subscription_id,
+            fund_id=subscription.fund_id,
             amount=subscription.amount.value
         )

@@ -1,4 +1,5 @@
 from domain import Amount, Transaction, UserRepository, FundRepository, TransactionRepository, ValidationStrategy
+from domain import FundNotFoundException, UserNotFoundException
 
 class SubscriptionService:
     def __init__(self, user_repository: 'UserRepository', fund_repository: 'FundRepository', transaction_repository: 'TransactionRepository'):
@@ -9,6 +10,18 @@ class SubscriptionService:
     def subscribe_to_fund(self, user_id: int, fund_id: int, amount: int, validations: list[ValidationStrategy]):
         user = self.user_repository.get_by_id(user_id)
         fund = self.fund_repository.get_by_id(fund_id)
+
+        print("==========================================")
+        print(user.name)
+        print("==========================================")
+        print(fund.name)
+        print("==========================================")
+
+        if not user:
+            raise UserNotFoundException(user_id)
+        
+        if not fund:
+            raise FundNotFoundException(fund_id)
         
         user.validations = validations
         transaction = user.subscribe_to_fund(fund, Amount(amount))

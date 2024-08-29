@@ -1,7 +1,7 @@
-import datetime
-from domain import Amount, TransactionType, Transaction, TransactionRepository
+from domain import Transaction, TransactionRepository
 from infrastructure.persistence.daos.transaction_dao import TransactionDAO
 from infrastructure.config.dynamodb_config import get_dynamodb_table
+from utils.error_utils import handle_exception
 
 
 class DynamoDBTrasacctionRepositoryImpl(TransactionRepository):
@@ -13,16 +13,21 @@ class DynamoDBTrasacctionRepositoryImpl(TransactionRepository):
         self.table.put_item(Item=item)
 
     def find_by_user_id(self, client_id: int) -> list[Transaction]:
-        response = self.table.query(
-            KeyConditionExpression='PK = :pk and begins_with(SK, :sk)',
-            ExpressionAttributeValues={
-                ':pk': f'CLIENT#{client_id}',
-                ':sk': 'TRANSACTION#'
-            }
-        )
-        items = response.get('Items', [])
-        transactions = []
-        for item in items:
-            transaction = TransactionDAO.from_dynamo_item(item)
-            transactions.append(transaction)
-        return transactions
+        try:
+            response = self.table.query(
+                KeyConditionExpression='PK = :pk and begins_with(SK, :sk)',
+                ExpressionAttributeValues={
+                    ':pk': f'CLIENT#{client_id}',
+                    ':sk': 'TRANSACTION#'
+                }
+            )
+            items = response.get('Items', [])
+            transactions = []
+            for item in items:
+                transaction = TransactionDAO.from_dynamo_item(item)
+                transactions.append(transaction)
+            return transactions
+        except Exception as err:
+            handle_exception(err)
+            return []
+
