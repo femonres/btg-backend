@@ -8,17 +8,18 @@ class FundDAO:
     @staticmethod
     def to_dynamo_item(fund: Fund) -> Dict:
         return {
-            'id': fund.id,
-            'name': fund.name,
-            'min_amount': fund.min_amount,
-            'category': fund.category.category
+            'PK': f'CLIENT#{fund.id}',
+            'SK': f'#METADATA#{fund.id}',
+            'Name': fund.name,
+            'MinAmount': fund.min_amount.value,
+            'Category': fund.category.category
         }
     
     @staticmethod
     def from_dynamo_item(item: Dict) -> Fund:
         return Fund(
-            id=item['id'],
-            name=item['name'],
-            min_amount=Amount(item['min_amount']),
-            category=FundCategory(item['category'])
+            id=int(item['PK'].split('#')[1]),
+            name=item['Name'],
+            min_amount=Amount(item['MinAmount']),
+            category=FundCategory(category=item['Category'])
         )

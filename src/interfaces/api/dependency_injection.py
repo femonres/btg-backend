@@ -1,59 +1,72 @@
-from application import FundService, UserService, GetFundsUsecase, GetProfileUseCase, GetTransactionHistoryUseCase, ResetBalanceUseCase, SubscribeToFundUseCase, UnsubscribeOfFundUseCase, UpdateUserProfileUseCase
-from domain import UserRepository, FundRepository, EventPublisher
-from infrastructure.messaging.event_publisher_impl import EventPublisherImpl
+from application import FundService, UserService, SubscriptionService, NotificationService, GetFundsUsecase, GetProfileUseCase, GetTransactionHistoryUseCase, ResetBalanceUseCase, SubscribeToFundUseCase, UnsubscribeOfFundUseCase, UpdateUserProfileUseCase
+from domain import UserRepository, FundRepository, TransactionRepository
+from infrastructure.messaging.sns_notification_service_impl import SNSNotificationServiceImpl
 from infrastructure.persistence.repositories.dynamodb_fund_repository_impl import DynamoDBFundRepositoryImpl
 from infrastructure.persistence.repositories.dynamodb_user_repository_impl import DynamoDBUserRepositoryImpl
+from infrastructure.persistence.repositories.dynamodb_transaction_repository_impl import DynamoDBTrasacctionRepositoryImpl
 from interfaces.api.controllers.fund_controller import FundController
 from interfaces.api.controllers.user_controller import UserController
 
-
+# Database
 def get_user_repository() -> UserRepository:
-    return DynamoDBUserRepositoryImpl('UsersTable')
+    return DynamoDBUserRepositoryImpl('UserTable')
 
 def get_fund_repository() -> FundRepository:
-    return DynamoDBFundRepositoryImpl('FundsTable')
+    return DynamoDBFundRepositoryImpl('FundTable')
 
-def get_event_publisher() -> EventPublisher:
-    return EventPublisherImpl()
+def get_fund_repository() -> TransactionRepository:
+    return DynamoDBTrasacctionRepositoryImpl('TransactionTable')
 
+# Servicios
 def get_fund_service():
     user_repo = get_user_repository()
-    fund_repo = get_fund_repository()
-    event_publisher = get_event_publisher()
-    return FundService(user_repo, fund_repo, event_publisher)
+    return FundService(user_repo)
+
+def get_subscription_service():
+    user_repo = get_user_repository()
+    fund_repo = get_user_repository()
+    transaction_repo = get_user_repository()
+    return SubscriptionService(user_repo, fund_repo, transaction_repo)
 
 def get_user_service():
     user_repo = get_user_repository()
     return UserService(user_repo)
 
+def get_notification_service() -> NotificationService:
+    return SNSNotificationServiceImpl()
+
+# Usecases
 def get_funds_usecase():
     fund_service = get_fund_service()
     return GetFundsUsecase(fund_service)
-
-def get_subscribe_usecase():
-    fund_service = get_fund_service()
-    return SubscribeToFundUseCase(fund_service)
-
-def get_unsubscribe_usecase():
-    fund_service = get_fund_service()
-    return UnsubscribeOfFundUseCase(fund_service)
 
 def get_profile_usecase():
     user_service = get_user_service()
     return GetProfileUseCase(user_service)
 
-def get_update_profile_usecase():
-    user_service = get_user_service()
-    return UpdateUserProfileUseCase(user_service)
-
 def get_reset_balance_usecase():
     user_service = get_user_service()
     return ResetBalanceUseCase(user_service)
 
-def get_transaction_history_usecase():
+def get_update_profile_usecase():
     user_service = get_user_service()
-    return GetTransactionHistoryUseCase(user_service)
+    return UpdateUserProfileUseCase(user_service)
 
+def get_transaction_history_usecase():
+    subscription_service = get_subscription_service()
+    return GetTransactionHistoryUseCase(subscription_service)
+
+def get_subscribe_usecase():
+    subscription_service = get_subscription_service()
+    notification_service = get_notification_service()
+    return SubscribeToFundUseCase(subscription_service, notification_service)
+
+def get_unsubscribe_usecase():
+    subscription_service = get_subscription_service()
+    notification_service = get_notification_service()
+    return UnsubscribeOfFundUseCase(subscription_service, notification_service)
+
+# Controllers
 def get_user_controller():
     profile_usecase = get_profile_usecase()
     update_profile_usecase = get_update_profile_usecase()

@@ -1,12 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import List
 
 from domain.models.fund import Fund
 
 class FundRepository(ABC):
 
     @abstractmethod
-    def get_all(self) -> List['Fund']:
+    def get_all(self) -> list['Fund']:
         pass
 
     @abstractmethod

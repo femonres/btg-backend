@@ -1,4 +1,3 @@
-from typing import List
 from domain import Amount, Transaction, UserRepository, FundRepository, TransactionRepository, ValidationStrategy
 
 class SubscriptionService:
@@ -7,7 +6,7 @@ class SubscriptionService:
         self.fund_repository = fund_repository
         self.transaction_repository = transaction_repository
 
-    def subscribe_to_fund(self, user_id: int, fund_id: int, amount: int, validations: List[ValidationStrategy]) -> 'Transaction':
+    def subscribe_to_fund(self, user_id: int, fund_id: int, amount: int, validations: list[ValidationStrategy]) -> 'Transaction':
         user = self.user_repository.get_by_id(user_id)
         fund = self.fund_repository.get_by_id(fund_id)
         
@@ -31,4 +30,4 @@ class SubscriptionService:
         return transaction
 
     def get_transaction_history(self, user_id: int) -> list['Transaction']:
-        return self.transaction_repository.get_by_user_id(user_id)
+        return self.transaction_repository.find_by_user_id(user_id)

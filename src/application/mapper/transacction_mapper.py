@@ -6,8 +6,7 @@ class TransactionMapper:
     def from_entity(transaction: 'Transaction') -> TransactionDTO:
         return TransactionDTO(
             transaction_id=transaction.transaction_id,
-            fund_id=transaction.fund.id,
-            fund_name=transaction.fund.name,
+            fund_id=transaction.fund_id,
             amount=transaction.amount.value,
             timestamp=transaction.timestamp.time.isoformat()
         )

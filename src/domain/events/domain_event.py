@@ -1,7 +1,3 @@
-from pydantic import BaseModel
-
-class DomainEvent(BaseModel):
-    occurred_on: str
-
-    class Config:
-        arbitrary_types_allowed = True
+class DomainEvent:
+    def __init__(self, occurred_on: str) -> None:
+        self.occurred_on = occurred_on

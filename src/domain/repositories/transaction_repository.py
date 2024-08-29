@@ -5,7 +5,7 @@ from domain.models.transaction import Transaction
 class TransactionRepository(ABC):
 
     @abstractmethod
-    def get_by_user_id(self, user_id: int) -> list['Transaction']:
+    def find_by_user_id(self, user_id: int) -> list['Transaction']:
         pass
 
     @abstractmethod

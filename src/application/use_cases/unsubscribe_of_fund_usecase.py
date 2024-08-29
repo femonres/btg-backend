@@ -1,6 +1,6 @@
 from application.services.notification_service import NotificationService
 from application.services.subscription_service import SubscriptionService
-from application.mapper.subscription_mapper import SubscriptionMapper
+from application.mapper.transacction_mapper import TransactionMapper
 from application.dto.subscription_dto import CancelSubscriptionDTO
 
 
@@ -17,4 +17,4 @@ class UnsubscribeOfFundUseCase:
         self.notification_service.send_notification(transaction.user, transaction.user.notification, message)
         
         
-        return SubscriptionMapper.from_entity(transaction)
+        return TransactionMapper.from_entity(transaction)

@@ -1,7 +1,6 @@
-from typing import List
-
 from application import GetProfileUseCase, GetTransactionHistoryUseCase, ResetBalanceUseCase, UpdateUserProfileUseCase
-from interfaces.api.schemas.schemas import TransactionSchema, UserSchema
+from interfaces.api.schemas.user_schemas import UserResponse, UserCreate
+from interfaces.api.schemas.transaction_schemas import TransactionResponse
 
 
 class UserController:
@@ -11,18 +10,18 @@ class UserController:
         self.reset_balance_usecase = reset_balance_usecase
         self.transaction_history_usecase = transaction_history_usecase
 
-    def get_profile(self, user_id: int) -> UserSchema:
+    def get_profile(self, user_id: int) -> UserResponse:
         user = self.profile_usecase.execute(user_id)
-        return UserSchema.from_domain(user)
+        return UserResponse.model_validate(user)
     
-    def update_profile(self, user_id: int, user_schema: UserSchema) -> UserSchema:
-        user = self.update_profile_usecase.execute(user_id, user_schema.to_domain())
-        return UserSchema.from_domain(user)
+    def update_profile(self, user_id: int, user: UserCreate) -> UserResponse:
+        user = self.update_profile_usecase.execute(user_id, user)
+        return UserResponse.model_validate(user)
     
-    def reset_balance(self, user_id: int) -> UserSchema:
+    def reset_balance(self, user_id: int) -> UserResponse:
         user = self.reset_balance_usecase.execute(user_id)
-        return UserSchema.from_domain(user)
+        return UserResponse.model_validate(user)
 
-    def get_transaction_history(self, user_id: int) -> List[TransactionSchema]:
+    def get_transaction_history(self, user_id: int) -> list[TransactionResponse]:
         transactions = self.transaction_history_usecase(user_id)
-        return [TransactionSchema.from_domain(tx) for tx in transactions]
+        return [TransactionResponse.model_validate(tx) for tx in transactions]

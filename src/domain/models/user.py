@@ -35,7 +35,7 @@ class User:
         self.subscriptions.append(subscription)
         self.balance -= amount
 
-        transaction = Transaction(user=self, fund=fund, amount=amount, transaction_type=TransactionType.OPENING)
+        transaction = Transaction(fund_id=fund.id, amount=amount, transaction_type=TransactionType.OPENING)
         return transaction
 
     def cancel_fund_subscription(self, fund: 'Fund'):
@@ -46,7 +46,7 @@ class User:
         self.balance += subscription.amount
         self.subscriptions.remove(subscription)
 
-        transaction = Transaction(user=self, fund=fund, amount=subscription.amount, transaction_type=TransactionType.CANCELLATION)
+        transaction = Transaction(fund_id=fund.id, amount=subscription.amount, transaction_type=TransactionType.CANCELLATION)
         return transaction
         
     def is_subscribed(self, fund: 'Fund') -> bool:

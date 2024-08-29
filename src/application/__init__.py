@@ -5,6 +5,8 @@ from .dto.subscription_dto import SubscriptionDTO, CreateSubscriptionDTO, Cancel
 
 from .services.fund_service import FundService
 from .services.user_service import UserService
+from .services.subscription_service import SubscriptionService
+from .services.notification_service import NotificationService
 
 from .use_cases.get_funds_usecase import GetFundsUsecase
 from .use_cases.get_profile_usecase import GetProfileUseCase
@@ -24,6 +26,8 @@ __all__ = [
     'CancelSubscriptionDTO',
     'UserService',
     'FundService',
+    'SubscriptionService',
+    'NotificationService',
     'GetFundsUsecase',
     'GetProfileUseCase',
     'UpdateUserProfileUseCase',
