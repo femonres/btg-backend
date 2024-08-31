@@ -1,9 +1,12 @@
+from boto3.dynamodb.conditions import Key
+
 from domain import Transaction, TransactionRepository
 from infrastructure.persistence.daos.transaction_dao import TransactionDAO
 from infrastructure.config.dynamodb_config import get_dynamodb_table
+from utils.singleton import singleton
 from utils.error_utils import handle_exception
 
-
+@singleton
 class DynamoDBTrasacctionRepositoryImpl(TransactionRepository):
     def __init__(self, table_name: str):
         self.table = get_dynamodb_table(table_name)
@@ -12,15 +15,10 @@ class DynamoDBTrasacctionRepositoryImpl(TransactionRepository):
         item = TransactionDAO.to_dynamo_item(transaction)
         self.table.put_item(Item=item)
 
-    def find_by_user_id(self, client_id: int) -> list[Transaction]:
+    def find_by_user_id(self, user_id: int) -> list[Transaction]:
         try:
-            response = self.table.query(
-                KeyConditionExpression='PK = :pk and begins_with(SK, :sk)',
-                ExpressionAttributeValues={
-                    ':pk': f'CLIENT#{client_id}',
-                    ':sk': 'TRANSACTION#'
-                }
-            )
+            response = self.table.query(IndexName='ClientIDIndex', KeyConditionExpression = Key('ClientID').eq(str(user_id)))
+
             items = response.get('Items', [])
             transactions = []
             for item in items:

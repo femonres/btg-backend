@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from domain import UserNotFoundException, FundNotFoundException, InsufficientBalanceException
+from domain import UserNotFoundException, FundNotFoundException, SubscriptionNotFoundException, InsufficientBalanceException
 from interfaces.api.controllers.fund_controller import FundController
 from interfaces.dependency_injection import get_fund_controller
 from interfaces.api.schemas.fund_schemas import FundResponse
@@ -19,9 +19,9 @@ async def subscribe_to_fund(fund_id: int, subscription: CreateSubscription, cont
     try:
         return controller.subscribe(fund_id, subscription)
     except UserNotFoundException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
     except FundNotFoundException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
@@ -30,5 +30,9 @@ async def unsubscribe_from_fund(fund_id: int, subscription: CancelSubscription, 
     try:
         return controller.unsubscribe(fund_id, subscription)
     except FundNotFoundException as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except UserNotFoundException as e:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

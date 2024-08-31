@@ -1,7 +1,7 @@
-from typing import NamedTuple
+from pydantic import BaseModel
 
 
-class FundDTO(NamedTuple):
+class FundDTO(BaseModel):
     id: int
     name: str
     min_amount: int

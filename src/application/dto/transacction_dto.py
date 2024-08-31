@@ -1,7 +1,7 @@
-from typing import NamedTuple
+from pydantic import BaseModel
 
 
-class TransactionDTO(NamedTuple):
+class TransactionDTO(BaseModel):
     transaction_id: str
     user_id: int
     fund_id: int

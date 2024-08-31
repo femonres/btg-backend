@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from .domain_event import DomainEvent
 from domain import Fund, User
@@ -14,7 +14,7 @@ class UserSubscribeEvent(DomainEvent):
             user=user,
             fund=fund,
             notification=user.notification.value,
-            occurred_on=datetime.datetime.now()
+            occurred_on=datetime.now()
         )
 
 class UserUnsubscribeEvent(DomainEvent):
@@ -28,5 +28,5 @@ class UserUnsubscribeEvent(DomainEvent):
             user=user,
             fund=fund,
             notification=user.notification.value,
-            occurred_on=datetime.datetime.now()
+            occurred_on=datetime.now()
         )

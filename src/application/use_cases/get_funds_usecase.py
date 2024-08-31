@@ -6,6 +6,6 @@ class GetFundsUsecase:
     def __init__(self, fund_service: FundService) -> None:
         self.fund_service = fund_service
 
-    def execute(self) -> list['FundDTO']:
+    def execute(self) -> list[FundDTO]:
         funds = self.fund_service.get_all_funds()
         return [FundMapper.from_entity(f) for f in funds]

@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from typing import Dict
 
 from domain import TransactionType, Transaction, Amount, Identifier
@@ -9,25 +9,25 @@ class TransactionDAO:
     @staticmethod
     def to_dynamo_item(transaction: Transaction):
         return {
-            'PK': f'CLIENT#{transaction.user_id}',
-            'SK': f'TRANSACTION#{transaction.transaction_id}',
-            'UserID': transaction.fund_id,
+            'PK': str(transaction.transaction_id.id),
+            'ClientID': str(transaction.user_id),
             'FundID': transaction.fund_id,
             'FundName': transaction.fund_name,
             'Amount': transaction.amount.value,
-            'Timestamp': transaction.timestamp.time.isoformat(),
+            'Timestamp': transaction.timestamp.isoformat(),
             'TransactionType': transaction.transaction_type.value,
         }
 
     @staticmethod
     def from_dynamo_item(item: Dict) -> Transaction:
         transaction = Transaction(
-            user_id=int(item['UserID']),
+            user_id=int(item['ClientID']),
             fund_id=int(item['FundID']),
             fund_name=str(item['FundName']),
-            amount=Amount(item['Amount']),
-            type=TransactionType[item['TransactionType']]
+            amount=Amount(int(item['Amount'])),
+            transaction_type=TransactionType[item['TransactionType']]
         )
-        transaction.timestamp = datetime.time.fromisoformat(item['Timestamp'])
+        transaction.transaction_id = Identifier(item['PK'])
+        transaction.timestamp = datetime.fromisoformat(item['Timestamp'])
         
         return transaction

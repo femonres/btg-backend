@@ -1,5 +1,5 @@
 import pytest
-import datetime
+from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 from domain import Amount, Transaction, TransactionType
@@ -55,7 +55,7 @@ def test_subscribe_to_fund_use_case_mapping(mock_transaction_mapper, setup_mocks
     subscription_service = setup_mocks['subscription_service']
     notification_service = setup_mocks['notification_service']
     
-    mock_transaction_mapper.from_entity.return_value = TransactionDTO(transaction_id="12345", user_id=1, fund_id=1, fund_name='FPV_BTG_PACTUAL_RECAUDADORA', amount=50000, timestamp=datetime.datetime.now(datetime.UTC).isoformat, transaction_type=TransactionType.OPENING)
+    mock_transaction_mapper.from_entity.return_value = TransactionDTO(transaction_id="12345", user_id=1, fund_id=1, fund_name='FPV_BTG_PACTUAL_RECAUDADORA', amount=50000, timestamp=datetime.now().isoformat(), transaction_type=TransactionType.OPENING)
     
     use_case = SubscribeToFundUseCase(subscription_service, notification_service)
     

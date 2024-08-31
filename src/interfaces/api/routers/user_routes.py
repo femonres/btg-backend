@@ -36,4 +36,8 @@ async def reset_balance(user_id: int, controller: UserController = Depends(get_u
     
 @router.get("/{user_id}/history", response_model=list[TransactionResponse])
 async def get_transaction_history(user_id: int, controller: UserController = Depends(get_user_controller)):
-    return controller.get_transaction_history(user_id)
+    try:
+        return controller.get_transaction_history(user_id)
+    except UserNotFoundException as e:
+          raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    

@@ -1,6 +1,6 @@
 from typing import Dict
 
-from domain import User, Fund, Subscription, Amount, NotificationType, FundCategory
+from domain import User, Identifier, Subscription, Amount, NotificationType, FundCategory
 
 
 class UserDAO:
@@ -8,7 +8,7 @@ class UserDAO:
     @staticmethod
     def to_dynamo_item(user: User):
         return {
-            'ClientId': str(user.id),
+            'PK': f'CLIENT#{user.id}',
             'Name': user.name,
             'Email': user.email,
             'Phone': user.phone,
@@ -16,7 +16,9 @@ class UserDAO:
             'Balance': user.balance.value,
             'Subscriptions': [
                 {
-                    'FundID': str(subscription.fund.id),
+                    'ID': str(subscription.subscription_id.id),
+                    'FundID': str(subscription.fund_id),
+                    'FundName': str(subscription.fund_name),
                     'Amount': str(subscription.amount.value)
                 }
                 for subscription in user.subscriptions
@@ -26,7 +28,7 @@ class UserDAO:
     @staticmethod
     def from_dynamo_item(item: Dict) -> User:
         user = User(
-            id=int(item['ClientId']),
+            id=int(item['PK'].split('#')[1]),
             name=item['Name'],
             email=item['Email'],
             phone=item['Phone'],
@@ -34,6 +36,8 @@ class UserDAO:
             balance=Amount(item['Balance'])
         )
         for sub in item.get('Subscriptions', []):
-            fund = Fund(id=int(sub['FundID']), name="", min_amount=Amount(0), category=FundCategory(category="FPV"))  # Mejorar
-            user.subscriptions.append(Subscription(fund=fund, amount=Amount(sub['Amount'])))
+            subscription = Subscription(fund_id=int(sub['FundID']), fund_name=sub['FundName'], amount=Amount(int(sub['Amount'])))
+            subscription.subscription_id = Identifier(sub['ID'])
+            user.subscriptions.append(subscription)
+
         return user

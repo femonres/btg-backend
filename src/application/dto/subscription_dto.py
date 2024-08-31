@@ -1,9 +1,11 @@
 from typing import NamedTuple
+from pydantic import BaseModel
 
 
-class SubscriptionDTO(NamedTuple):
+class SubscriptionDTO(BaseModel):
     id: str
     fund_id: int
+    fund_name: str
     amount: int
 
 class CreateSubscriptionDTO(NamedTuple):

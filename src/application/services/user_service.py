@@ -1,9 +1,13 @@
+from typing import List
 from domain import Amount, User, UserRepository, UserNotFoundException
 
 
 class UserService:
     def __init__(self, user_repo: UserRepository) -> None:
         self.user_repo = user_repo
+
+    def fetch_all(self) -> List[User]:
+        return self.user_repo.get_all()
 
     def get_user_profile(self, user_id: int) -> 'User':
         user = self.user_repo.get_by_id(user_id)

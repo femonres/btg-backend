@@ -11,12 +11,6 @@ class SubscriptionService:
         user = self.user_repository.get_by_id(user_id)
         fund = self.fund_repository.get_by_id(fund_id)
 
-        print("==========================================")
-        print(user.name)
-        print("==========================================")
-        print(fund.name)
-        print("==========================================")
-
         if not user:
             raise UserNotFoundException(user_id)
         
@@ -34,6 +28,12 @@ class SubscriptionService:
     def unsubscribe_from_fund(self, user_id: int, fund_id: int):
         user = self.user_repository.get_by_id(user_id)
         fund = self.fund_repository.get_by_id(fund_id)
+
+        if not user:
+            raise UserNotFoundException(user_id)
+
+        if not fund:
+            raise FundNotFoundException(fund_id)
         
         transaction = user.cancel_fund_subscription(fund)
         
@@ -42,5 +42,9 @@ class SubscriptionService:
         
         return transaction, user
 
-    def get_transaction_history(self, user_id: int) -> list['Transaction']:
+    def get_transaction_history(self, user_id: int) -> list[Transaction]:
+        user = self.user_repository.get_by_id(user_id)
+        if not user:
+            raise UserNotFoundException(user_id)
+        
         return self.transaction_repository.find_by_user_id(user_id)

@@ -11,6 +11,7 @@ from .services.notification_service import NotificationService
 from .services.strategies.subscription_strategies import InsufficientBalanceValidation, MinimumAmountValidation, SubscriptionAlreadyValidation
 
 from .use_cases.get_funds_usecase import GetFundsUsecase
+from .use_cases.fetch_users_usecase import FetchUsersUsecase
 from .use_cases.get_profile_usecase import GetProfileUseCase
 from .use_cases.update_profile_usecase import UpdateUserProfileUseCase
 from .use_cases.reset_balance_usecase import ResetBalanceUseCase
@@ -31,6 +32,7 @@ __all__ = [
     'SubscriptionService',
     'NotificationService',
     'GetFundsUsecase',
+    'FetchUsersUsecase',
     'GetProfileUseCase',
     'UpdateUserProfileUseCase',
     'ResetBalanceUseCase',

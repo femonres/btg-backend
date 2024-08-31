@@ -3,9 +3,10 @@ from typing import Optional
 from domain import User, UserRepository
 from infrastructure.persistence.daos.user_dao import UserDAO
 from infrastructure.config.dynamodb_config import get_dynamodb_table
+from utils.singleton import singleton
 from utils.error_utils import handle_exception
 
-
+@singleton
 class DynamoDBUserRepositoryImpl(UserRepository):
     def __init__(self, table_name: str):
         self.table = get_dynamodb_table(table_name)
@@ -21,7 +22,7 @@ class DynamoDBUserRepositoryImpl(UserRepository):
 
     def get_by_id(self, user_id: int) -> Optional[User]:
         try:
-            response = self.table.get_item(Key={'ClientId': str(user_id)})
+            response = self.table.get_item(Key={'PK': f'CLIENT#{user_id}'})
             item = response['Item']
             if item:
                 return UserDAO.from_dynamo_item(item)

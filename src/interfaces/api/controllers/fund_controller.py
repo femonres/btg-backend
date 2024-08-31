@@ -1,4 +1,4 @@
-from domain import FundNotFoundException, InsufficientBalanceException
+from domain import UserNotFoundException, FundNotFoundException, InsufficientBalanceException
 from application import GetFundsUsecase, SubscribeToFundUseCase, UnsubscribeOfFundUseCase, CreateSubscriptionDTO, CancelSubscriptionDTO
 from interfaces.api.schemas.fund_schemas import FundResponse
 from interfaces.api.schemas.transaction_schemas import TransactionResponse, CreateSubscription, CancelSubscription
@@ -16,22 +16,11 @@ class FundController:
         return [FundResponse.model_validate(tx) for tx in funds]
 
     def subscribe(self, fund_id: int, subscription: CreateSubscription) -> TransactionResponse:
-        try:
-            dto = CreateSubscriptionDTO(subscription.user_id, fund_id, subscription.amount)
-            transaction = self.subscribe_usecase.execute(dto)
-            return TransactionResponse.model_validate(transaction)
-        except FundNotFoundException as e:
-            handle_exception(e)
-            raise
-        except InsufficientBalanceException as e:
-            handle_exception(e)
-            raise
+        dto = CreateSubscriptionDTO(subscription.user_id, fund_id, subscription.amount)
+        transaction = self.subscribe_usecase.execute(dto)
+        return TransactionResponse.model_validate(transaction)
 
     def unsubscribe(self, fund_id: int, cancel: CancelSubscription) -> TransactionResponse:
-        try:
-            dto = CancelSubscriptionDTO(cancel.user_id, fund_id)
-            transaction = self.unsubscribe_usecase.execute(dto)
-            return TransactionResponse.model_validate(transaction)
-        except FundNotFoundException as e:
-            handle_exception(e)
-            raise
+        dto = CancelSubscriptionDTO(cancel.user_id, fund_id)
+        transaction = self.unsubscribe_usecase.execute(dto)
+        return TransactionResponse.model_validate(transaction)

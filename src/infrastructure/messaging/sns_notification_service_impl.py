@@ -1,14 +1,17 @@
+import os
 import boto3
 
 from domain import User, NotificationType
 from application import NotificationService
+from utils.singleton import singleton
 from utils.error_utils import log_info
 
+@singleton
 class SNSNotificationServiceImpl(NotificationService):
     def __init__(self):
-        self.sns_client = boto3.client('sns', region_name='us-east-1')
-        self.sms_topic_arn = "arn:aws:sns:us-east-1:123456789012:sms-topic" #Remplazar por el AccountID de AWS
-        self.email_topic_arn = "arn:aws:sns:us-east-1:123456789012:email-topic"
+        self.sns_client = boto3.client('sns', region_name='us-west-2')
+        self.email_topic_arn = os.getenv('EMAIL_TOPIC_ARN')
+        self.sms_topic_arn = os.getenv('SMS_TOPIC_ARN')
 
     def send_notification(self, user: 'User', notification_type: NotificationType, message: str):
         if notification_type == NotificationType.EMAIL:
@@ -41,9 +44,11 @@ class SNSNotificationServiceImpl(NotificationService):
         
         
     def _publish_to_sns(self, topic_arn, attributes, user_name: str, message: str):
-        self.sns_client.publish(
-            TopicArn=topic_arn,
-            Message=message,
-            Subject=f"Notificación para {user_name}",
-            MessageAttributes=attributes
-        )
+        try:
+            self.sns_client.publish(
+                TopicArn=topic_arn,
+                Message=message,
+                Subject=f"Notificación para {user_name}",
+                MessageAttributes=attributes)
+        except Exception as e:
+            print(f"Error al publicar el mensaje en SNS: {e}")

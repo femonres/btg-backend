@@ -31,7 +31,7 @@ class User:
         for validation in self.validations:
             validation.can_subscribe(self, fund, amount)
 
-        subscription = Subscription(fund_id=fund.id, amount=amount)
+        subscription = Subscription(fund_id=fund.id, fund_name=fund.name, amount=amount)
         self.subscriptions.append(subscription)
         self.balance -= amount
 
