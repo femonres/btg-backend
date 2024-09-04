@@ -1,13 +1,15 @@
 import os
+import json
 from fastapi import FastAPI
-from mangum import Mangum
 from fastapi.middleware.cors import CORSMiddleware
+from mangum import Mangum
 
 from interfaces.api.routers.user_routes import router as user_router
 from interfaces.api.routers.fund_routes import router as fund_router
-from interfaces.api.routers.middlewares.error_handling import dispatch, error_handling_middleware
 from logger.logger import setup_logger
 from dotenv import load_dotenv
+
+from utils.error_utils import log_info
 
 # Carga de variables de entorno y configuración del logger
 load_dotenv()
@@ -30,13 +32,14 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"]
 )
 
+@app.get("/")
+async def read_root():
+    log_info(message="Ingresando a la ruta raiz")
+    return {"message": "BTG PActual Investmen"}
+
 # Routers de la applicacion
 app.include_router(user_router, prefix="/api/v1", tags=["Users"])
 app.include_router(fund_router, prefix="/api/v1", tags=["Funds"])
 
 # Adaptador para AWS Lambda
-handler = Mangum(app, lifespan="off")
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080, log_level="info")
+handler = Mangum(app)

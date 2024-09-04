@@ -26,7 +26,7 @@ class SNSNotificationServiceImpl(NotificationService):
                 'StringValue': email
             }
         }
-        self._publish_to_sns(self.email_topic_arn, attributes, user_name=username, message=message)
+        self._publish_to_sns(self.email_topic_arn, attributes, subject=email, message=message)
         
 
     def _send_sms(self, username: str, phone: str, message: str):
@@ -40,15 +40,15 @@ class SNSNotificationServiceImpl(NotificationService):
                 'StringValue': phone
             }
         }
-        self._publish_to_sns(self.sms_topic_arn, attributes, user_name=username, message=message)
+        self._publish_to_sns(self.sms_topic_arn, attributes, subject=phone, message=message)
         
         
-    def _publish_to_sns(self, topic_arn, attributes, user_name: str, message: str):
+    def _publish_to_sns(self, topic_arn, attributes, subject: User, message: str):
         try:
             self.sns_client.publish(
                 TopicArn=topic_arn,
                 Message=message,
-                Subject=f"Notificación para {user_name}",
+                Subject=subject,
                 MessageAttributes=attributes)
         except Exception as e:
             print(f"Error al publicar el mensaje en SNS: {e}")
