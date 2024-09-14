@@ -1,28 +1,27 @@
 import os
-import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
 from interfaces.api.routers.user_routes import router as user_router
 from interfaces.api.routers.fund_routes import router as fund_router
-from logger.logger import setup_logger
+from utils.logger_config import setup_logging
 from dotenv import load_dotenv
 
 from utils.error_utils import log_info
 
 # Carga de variables de entorno y configuración del logger
 load_dotenv()
-setup_logger()
+setup_logging()
 
 # Configuración de la aplicación FastAPI
 app = FastAPI(title="BTG Pactual Funds API")
 
 # Configuración de CORS dependiendo del entorno
-if os.getenv("ENVIRONMENT") == "production":
-    allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
-else:
+if os.getenv("ENVIRONMENT") == "develop":
     allowed_origins = ["*"]
+else:
+    allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
 
 app.add_middleware(
     CORSMiddleware,

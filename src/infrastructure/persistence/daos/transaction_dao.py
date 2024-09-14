@@ -11,7 +11,7 @@ class TransactionDAO:
         return {
             'PK': str(transaction.transaction_id.id),
             'ClientID': str(transaction.user_id),
-            'FundID': transaction.fund_id,
+            'FundID': str(transaction.fund_id),
             'FundName': transaction.fund_name,
             'Amount': transaction.amount.value,
             'Timestamp': transaction.timestamp.isoformat(),

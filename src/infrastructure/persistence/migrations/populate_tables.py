@@ -19,10 +19,10 @@ def create_funds(table_name: str):
 
     fondos = [
         {"PK": 'FUND#1', "Name": "FPV_BTG_PACTUAL_RECAUDADORA", "MinAmount": 75000, "Category": "FPV"},
-        {"PK": 'FUND#2', "Name": "FPV_BTG_PACTUAL_ECOPETROL", "MinAmount": 125000, "Category": "FPV"},
-        {"PK": 'FUND#3', "Name": "DEUDAPRIVADA", "MinAmount": 50000, "Category": "FIC"},
-        {"PK": 'FUND#4', "Name": "FDO-ACCIONES", "MinAmount": 250000, "Category": "FIC"},
-        {"PK": 'FUND#5', "Name": "FPV_BTG_PACTUAL_DINAMICA", "MinAmount": 100000, "Category": "FPV"}
+        {"PK": "FUND#2", "Name": "FPV_BTG_PACTUAL_ECOPETROL", "MinAmount": 125000, "Category": "FPV"},
+        {"PK": "FUND#3", "Name": "DEUDAPRIVADA", "MinAmount": 50000, "Category": "FIC"},
+        {"PK": "FUND#4", "Name": "FDO-ACCIONES", "MinAmount": 250000, "Category": "FIC"},
+        {"PK": "FUND#5", "Name": "FPV_BTG_PACTUAL_DINAMICA", "MinAmount": 100000, "Category": "FPV"}
     ]
 
     for fondo in fondos:
