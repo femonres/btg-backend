@@ -7,8 +7,7 @@ from domain import (
     FundRepository,
     TransactionRepository,
     UserRepository,
-    Amount, FundCategory, TransactionType
-)
+    Amount, FundCategory, TransactionType)
 
 
 @pytest.fixture

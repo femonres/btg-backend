@@ -1,14 +1,14 @@
-import unittest
+import pytest
 
 from domain import FundCategory
 
-class TestFundCategory(unittest.TestCase):
+class TestFundCategory:
 
-    def test_category_creation(self):
+    def test_category_initialization(self):
         category = FundCategory(category="FPV")
         # Verifica que el valor sea una categoría válida
-        self.assertEqual(category.category, 'FPV')
+        assert category.category == 'FPV'
 
     def test_category_invalid(self):
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             FundCategory(category="PRUEBA")

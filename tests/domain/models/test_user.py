@@ -1,54 +1,72 @@
-import unittest
+import pytest
 
 from domain import User, Fund, Amount, FundCategory, TransactionType, NotificationType, ValidationStrategy, SubscriptionNotFoundException
 
-class TestUser(unittest.TestCase):
-    def setUp(self):
-        self.user = User(
-            id=1,
-            name="John Doe",
-            email="john.doe@example.com",
-            phone="+573104567890",
-            notification=NotificationType.EMAIL,
-            balance=Amount(500000)
-        )
-        self.fund = Fund(
-            id=1,
-            name="FPV_BTG_PACTUAL_RECAUDADORA",
-            min_amount=Amount(75000),
-            category=FundCategory(category='FPV')
-        )
+@pytest.fixture
+def user():
+    return User(
+        id=1,
+        name="John Doe",
+        email="john.doe@example.com",
+        phone="+573104567890",
+        notification=NotificationType.EMAIL,
+        balance=Amount(500000))
+    
+@pytest.fixture
+def fund():
+    return Fund(
+        id=1,
+        name="FPV_BTG_PACTUAL_RECAUDADORA",
+        min_amount=Amount(75000),
+        category=FundCategory(category='FPV'))
 
-    def test_subscribe_to_fund_success(self):
+class TestUser:
+
+    def test_subscribe_to_fund(self, user: User, fund: Fund):
         # Suscribe al cliente al fondo
-        invest_amount = Amount(80000)
-        transaction = self.user.subscribe_to_fund(self.fund, invest_amount)
+        transaction = user.subscribe_to_fund(fund, Amount(80000))
         
         # Verifica que el saldo se haya actualizado
+        assert user.balance.value == 420000
         
         # Verifica que la transacción haya sido registrada
-        self.assertEqual(len(self.user.subscriptions), 1)
-        self.assertEqual(self.user.subscriptions[0].fund_id, self.fund.id)
-        self.assertEqual(self.user.subscriptions[0].amount, invest_amount)
-        self.assertEqual(self.user.balance.value, 420000)
-        self.assertEqual(transaction.fund_id, 1)
-        self.assertEqual(transaction.amount.value, 80000)
-        self.assertEqual(transaction.transaction_type, TransactionType.OPENING)
+        assert len(user.subscriptions) == 1
+        assert user.subscriptions[0].fund_id == fund.id
+        assert user.subscriptions[0].amount.value == 80000
 
-    def test_unsubscribe_from_fund(self):
+        # Verifica que la transacción haya sido registrada
+        assert transaction.fund_id == fund.id
+        assert transaction.amount.value == 80000
+        assert transaction.transaction_type == TransactionType.OPENING
+
+    def test_unsubscribe_from_fund(self, user: User, fund: Fund):
         # Se suscribe y luego cancela la suscripción
-        invest_amount = Amount(80000)
-        self.user.subscribe_to_fund(self.fund, invest_amount)
-        transaction = self.user.cancel_fund_subscription(self.fund)
+        user.subscribe_to_fund(fund, Amount(80000))
+        transaction = user.cancel_fund_subscription(fund)
         
+        # Verifica que la suscripción se haya cancelado
+        assert len(user.subscriptions) == 0
+
         # Verifica que el saldo se haya restablecido
-        self.assertEqual(self.user.balance.value, 500000)
+        assert user.balance.value == 500000
         
         # Verifica que la transacción de cancelación se haya registrado
-        self.assertEqual(transaction.amount.value, 80000)
-        self.assertEqual(transaction.transaction_type, TransactionType.CANCELLATION)
+        assert transaction.amount.value == 80000
+        assert transaction.transaction_type == TransactionType.CANCELLATION
 
-    def test_unsubscribe_fund_empty(self):
+    def test_cancel_non_existent_subscription(self, user: User, fund: Fund):
         # Intentar canelar un suscripcion que no esta registrada
-        with self.assertRaises(SubscriptionNotFoundException):
-            self.user.cancel_fund_subscription(self.fund)
+        with pytest.raises(SubscriptionNotFoundException):
+            user.cancel_fund_subscription(fund)
+
+    def test_is_subscribed(self, user: User, fund: Fund):
+        amount = Amount(80000)
+        user.subscribe_to_fund(fund, amount)
+        assert user.is_subscribed(fund) is True
+
+    def test_get_subscription(self, user: User, fund: Fund):
+        amount = Amount(80000)
+        user.subscribe_to_fund(fund, amount)
+        subscription = user.get_subscription(fund)
+        assert subscription is not None
+        assert subscription.fund_id == fund.id
